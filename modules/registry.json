@@ -9,6 +9,9 @@
     {"id":"communication","title_ru":"Обмен навыками: протокол и границы доверия","title_en":"Skill exchange: protocol and trust boundaries","status":"setup-guide","dependencies":[]},
     {"id":"computer-control","title_ru":"Подключение управления компьютером","title_en":"Computer control setup","status":"setup-guide","dependencies":[]},
     {"id":"secret-storage","title_ru":"Настройка защищённого хранения","title_en":"Secret storage setup","status":"setup-guide","dependencies":[]},
+    {"id":"engineering","title_ru":"Инженерная работа: правила, изменения, review, приёмка","title_en":"Engineering: rules, changes, review, acceptance","status":"local","dependencies":["projects"]},
+    {"id":"experiments","title_ru":"Замеры и эксперименты в пределах бюджета","title_en":"Measurements and experiments within a budget","status":"local","dependencies":["engineering"]},
+    {"id":"machine-queue","title_ru":"Очередь к машинам для замеров (проектирование)","title_en":"Queue to measurement machines (design)","status":"planned","dependencies":["experiments"]},
     {"id":"remote-access","title_ru":"Доступ с других устройств (проектирование)","title_en":"Access from other devices (design)","status":"planned","dependencies":[]}
   ]
 }

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -178,6 +179,46 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(cfg['deferred_modules'],['remote-access'])
         self.write_answers({'moduels':['projects']})
         self.run_cli('install','--target',self.root,'--answers',self.answers,ok=False)
+
+    def test_engineering_modules_install_with_dependencies(self):
+        self.write_answers({'name':'Alex Fiction','modules':['experiments']}); self.install()
+        cfg=json.loads((self.root/'config/instance.json').read_text())
+        self.assertEqual(cfg['modules'],['engineering','experiments','projects'])
+        for mid in ('engineering','experiments'):
+            self.assertTrue((self.root/f'.agents/skills/jarvis-{mid}/SKILL.md').is_file())
+        self.assertTrue((self.root/'modules/engineering/references/review.md').is_file())
+        self.assertTrue((self.root/'modules/experiments/templates/experiment-plan.md').is_file())
+        self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
+
+    def test_engineering_project_gets_starter_rules(self):
+        self.write_answers({'name':'Alex Fiction','modules':['engineering']}); self.install()
+        self.run_cli('project','--root',self.root,'--id','atlas','--title','Atlas','--kind','engineering')
+        self.run_cli('project','--root',self.root,'--id','studio','--title','Studio','--kind','design')
+        atlas=(self.root/'projects/atlas/governance/README.md').read_text()
+        self.assertIn('modules/engineering/references/rules.md',atlas)
+        studio=(self.root/'projects/studio/governance/README.md').read_text()
+        self.assertNotIn('modules/engineering',studio)
+        self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
+
+    def test_engineering_kind_without_module_keeps_plain_rules(self):
+        self.write_answers({'name':'Alex Fiction','modules':['projects']}); self.install()
+        self.run_cli('project','--root',self.root,'--id','atlas','--title','Atlas','--kind','engineering')
+        self.assertNotIn('modules/engineering',(self.root/'projects/atlas/governance/README.md').read_text())
+
+    def test_machine_queue_is_deferred_not_installed(self):
+        self.write_answers({'name':'Alex Fiction','modules':['machine-queue']}); self.install()
+        cfg=json.loads((self.root/'config/instance.json').read_text())
+        self.assertEqual(cfg['deferred_modules'],['machine-queue'])
+        self.assertFalse((self.root/'modules/machine-queue').exists())
+
+    def test_presets_and_module_links_resolve(self):
+        ids={m['id'] for m in json.loads((SOURCE/'modules/registry.json').read_text())['modules']}
+        for preset in json.loads((SOURCE/'presets/presets.json').read_text()).values():
+            self.assertTrue(set(preset)<=ids, preset)
+        for mid in ('engineering','experiments'):
+            for doc in (SOURCE/'modules'/mid).rglob('*.md'):
+                for link in re.findall(r'(?<![\w/])((?:modules|core)/[\w./-]+\.md)',doc.read_text()):
+                    self.assertTrue((SOURCE/link).is_file(), f'{doc.name}: {link}')
 
 
 if __name__=='__main__': unittest.main()

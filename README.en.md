@@ -7,7 +7,7 @@ answer a few questions, and let the agent create a dedicated directory. One
 owner can use it for personal matters, engineering and design, with separate
 contexts and permissions.
 
-**Version 0.1.0 is a local prototype.** It is neither a model nor an always-on
+**Version 0.2.0 is a local prototype.** It is neither a model nor an always-on
 service. An attached agent maintains the base during active sessions. Installation
 does not change global agent settings, existing projects or connected accounts.
 
@@ -114,19 +114,48 @@ Search is scoped text search, not semantic RAG. Markdown remains the source of
 truth; a rebuildable index can be added later. The agent must respect excluded
 topics: CLI word checks are not a semantic privacy classifier.
 
+## Engineering work with agents
+
+The `engineering` module (requires `projects`) defines how an agent works on
+code in a registered project. It first classifies the assignment: explore,
+change, review, accept or hand off. Each assignment authorizes only its own
+result: exploring does not allow edits, a change does not allow a commit, a
+commit does not allow push or release. A project rule has a stable ID, scope,
+invariant and evidence path. For non-trivial work the agent writes a task card:
+what to improve, which observable behavior to keep and how to check it. Review
+gives a verdict per rule with evidence and looks for behavior tests often miss:
+cleanup order, error order, resource release. The final report keeps "fixed",
+"measured", "consumers checked", "merged" and "released" apart instead of one
+word "done".
+
+The `experiments` module covers measurements: a hypothesis mode (about 5
+minutes), a final check (about an hour) and extended research only on explicit
+request. Correctness is checked before timing, the criterion is set before the
+run, inconvenient cells are kept, and repeats need a new reason. "No difference
+established" is a valid result. The `engineering` preset selects `projects`,
+`search`, `engineering` and `experiments`. With the module installed,
+`project --kind engineering` creates a starter `governance/README.md` routing
+to the rule format and templates.
+
+A queue to dedicated machines for confirming measurements and a coordinator
+(`machine-queue`) are planned and not installed.
+
 ## Capability status
 
 Canonical IDs, statuses and dependencies: [modules/registry.json](modules/registry.json).
 
-| Capability | v1 status |
+| Capability | Status |
 |---|---|
 | Installation, module selection, integrity checks | Local commands |
 | Memory, corrections, deleting an active record | Local commands and agent rules |
 | Engineering/design projects and rule hierarchy | Local commands and agent rules |
+| Engineering work: assignments, review, acceptance, handoff | Agent rules and templates |
+| Measurements and experiments within a budget | Agent rules and templates |
 | Search and explicit text import | Local commands |
 | Local snapshots and pending-change queue | Local commands; no network delivery |
 | GitLab/GitHub/cloud sync | Separate setup guidance |
 | Skill exchange, computer control, secret storage | Optional guides; services unconfigured |
+| Machine queue for measurements and coordinator | Planned, not implemented |
 | Remote MCP access from other devices | Planned, not implemented |
 
 CLI mutations enter a local queue. No watcher, background push or server runs.

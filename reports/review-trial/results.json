@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-24",
+  "product_version": "0.2.0",
+  "cli_version": "0.163.0-alpha.11",
+  "reasoning_effort": "medium",
+  "fictional_data_only": true,
+  "attempts_per_cell": 1,
+  "fixture": "tests/fixtures/review-trial",
+  "hidden_scenario": {
+    "value_base": 4033,
+    "value_candidate": 4033,
+    "release_order_base": "correct",
+    "release_order_candidate": "violated",
+    "tail_expected": [
+      "2",
+      "1",
+      "0"
+    ],
+    "tail_candidate": [
+      "4",
+      "2",
+      "0"
+    ]
+  },
+  "runs": [
+    {
+      "condition": "plain",
+      "model": "gpt-5.6-luna",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": false,
+      "found_stale_exclusive_clear": true,
+      "cited_rule_id": false,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 4
+    },
+    {
+      "condition": "plain",
+      "model": "gpt-6-luna",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": true,
+      "found_stale_exclusive_clear": false,
+      "cited_rule_id": false,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 3
+    },
+    {
+      "condition": "plain",
+      "model": "gpt-6.1-sol",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": true,
+      "found_stale_exclusive_clear": true,
+      "cited_rule_id": true,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 4
+    },
+    {
+      "condition": "jarvis",
+      "model": "gpt-5.6-luna",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": true,
+      "found_stale_exclusive_clear": "risk",
+      "cited_rule_id": true,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 8
+    },
+    {
+      "condition": "jarvis",
+      "model": "gpt-6-luna",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": true,
+      "found_stale_exclusive_clear": false,
+      "cited_rule_id": true,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 9
+    },
+    {
+      "condition": "jarvis",
+      "model": "gpt-6.1-sol",
+      "exit_code": 0,
+      "verdict": "do-not-merge",
+      "found_order_violation": true,
+      "named_missing_scenario": true,
+      "found_stale_exclusive_clear": true,
+      "cited_rule_id": true,
+      "library_modified": false,
+      "tests_run": false,
+      "commands": 8
+    }
+  ],
+  "limits": [
+    "one attempt per cell",
+    "owner global Codex instruction (no tests without request) loaded in both conditions despite isolation flags",
+    "contract stated in the edited file: detection at ceiling in both conditions"
+  ]
+}
