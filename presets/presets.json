@@ -1,0 +1,5 @@
+{
+  "personal": ["personal-memory", "search"],
+  "projects": ["projects", "search"],
+  "combined": ["personal-memory", "projects", "search"]
+}

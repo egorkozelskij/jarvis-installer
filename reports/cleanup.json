@@ -1,0 +1,10 @@
+{
+  "deleted": true,
+  "synthetic_workspaces": 3,
+  "primary_instances": 4,
+  "total_instance_trees_including_snapshots_and_recovery_copies": 11,
+  "raw_tool_logs_deleted": true,
+  "test_root_exists": false,
+  "real_systems_migrated": false,
+  "remote_actions": false
+}
