@@ -12,7 +12,7 @@ import shutil
 import sys
 import tempfile
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 SOURCE = Path(__file__).resolve().parents[2]
 ID = re.compile(r"^[a-z][a-z0-9-]{0,63}$")
 SECRET = re.compile(r"(?:glpat-|ghp_|github_pat_|sk-proj-)[A-Za-z0-9_-]{8,}|-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----|(?:password|token|api[_-]?key)\s*[:=]\s*[^\s]{8,}", re.I)
@@ -334,9 +334,13 @@ def project(args, root, cfg):
     rel = 'projects/' + pid
     if safe(root, rel).exists():
         raise ValueError('Project already exists')
+    rules = '# Project rules\n\nRead core/scopes.md from the instance root.\nAdd real rules here with stable IDs, scope, reason and acceptance evidence.\nLoad only the child branch needed for the task.\n'
+    template = safe(root, 'modules/engineering/templates/governance-readme.md')
+    if args.kind == 'engineering' and 'engineering' in cfg['modules'] and template.is_file():
+        rules = template.read_text(encoding='utf-8')
     with locked(root):
         atomic(root, rel + '/project.md', f'# {args.title}\n\nID: {pid}\nKind: {args.kind}\n\nPurpose: to be clarified with owner.\nSource repository: unbound.\nRules: governance/README.md.\n')
-        atomic(root, rel + '/governance/README.md', '# Project rules\n\nRead core/scopes.md from the instance root.\nAdd real rules here with stable IDs, scope, reason and acceptance evidence.\nLoad only the child branch needed for the task.\n')
+        atomic(root, rel + '/governance/README.md', rules)
         enqueue(root, 'project', rel)
     return dict(created=rel, source_repository='unbound')
 
@@ -446,6 +450,7 @@ def questions(language):
         q('module_options.communication','text','Кому и что планируете передавать? Без отправки сейчас.' if ru else 'Who and what do you intend to exchange? No sending now.',when='communication'),
         q('module_options.computer-control','single','Какая ОС для необязательного управления?' if ru else 'Which OS for optional computer control?', ['macOS','Windows','Linux','later'],'computer-control'),
         q('module_options.secret-storage','single','Секреты: системное хранилище или обсудить шифрование бэкапа?' if ru else 'Secrets: OS storage or discuss encrypted backup?', ['OS-storage','discuss-encrypted-backup','later'],'secret-storage'),
+        q('module_options.machine-queue','single','Очередь к машинам для замеров пока проектируется. Сохранить интерес?' if ru else 'The measurement machine queue is planned. Record interest?', ['later','interested'],'machine-queue'),
         q('module_options.remote-access','single','Удалённый режим пока проектируется. Сохранить интерес?' if ru else 'Remote access is planned. Record interest?', ['later','interested'],'remote-access')])
 
 

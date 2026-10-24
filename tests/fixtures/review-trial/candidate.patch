@@ -1,0 +1,41 @@
+diff --git a/atlas_core/graph.py b/atlas_core/graph.py
+index c715aae..2004633 100644
+--- a/atlas_core/graph.py
++++ b/atlas_core/graph.py
+@@ -25,6 +25,12 @@ class Source:
+     def _subscribe(self, consumer):
+         self._subscribers.append(consumer)
+ 
++    def _detach_exclusive(self, consumer):
++        # Only one subscriber: drop the list without an O(n) remove scan.
++        self._subscribers.clear()
++        if self._on_release is not None:
++            self._on_release(self, consumer)
++
+     def _unsubscribe(self, consumer):
+         self._subscribers.remove(consumer)
+         if self._on_release is not None:
+@@ -74,11 +80,21 @@ class Computed:
+             return
+         self._disposed = True
+         errors = []
+-        for source in reversed(self._deps):
++        # Fast path: sources owned only by this computation are detached in one
++        # pass; shared sources still need the list scan. On large graphs most
++        # sources are exclusive, so this avoids O(n) removals per source.
++        exclusive = [s for s in self._deps if len(s._subscribers) == 1]
++        shared = [s for s in self._deps if len(s._subscribers) > 1]
++        for source in reversed(exclusive):
+             try:
+-                source._unsubscribe(self)
++                source._detach_exclusive(self)
+             except Exception as exc:  # collected, disposal continues
+                 errors.append(exc)
++        for source in reversed(shared):
++            try:
++                source._unsubscribe(self)
++            except Exception as exc:
++                errors.append(exc)
+         self._deps = []
+         for handler in reversed(self._cleanups):
+             try:

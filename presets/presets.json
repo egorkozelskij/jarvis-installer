@@ -1,5 +1,6 @@
 {
   "personal": ["personal-memory", "search"],
   "projects": ["projects", "search"],
+  "engineering": ["projects", "search", "engineering", "experiments"],
   "combined": ["personal-memory", "projects", "search"]
 }
