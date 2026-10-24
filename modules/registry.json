@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "modules": [
+    {"id":"personal-memory","title_ru":"Память и предпочтения","title_en":"Memory and preferences","status":"local","dependencies":[]},
+    {"id":"projects","title_ru":"Проекты и иерархия правил","title_en":"Projects and rule hierarchy","status":"local","dependencies":[]},
+    {"id":"search","title_ru":"Поиск по выбранной области","title_en":"Search within a selected scope","status":"local","dependencies":[]},
+    {"id":"history","title_ru":"Архив явно предоставленных текстов","title_en":"Archive explicitly supplied texts","status":"local","dependencies":["search"]},
+    {"id":"sync","title_ru":"Локальные снимки и настройка синхронизации","title_en":"Local snapshots and sync setup","status":"local+guide","dependencies":[]},
+    {"id":"communication","title_ru":"Обмен навыками: протокол и границы доверия","title_en":"Skill exchange: protocol and trust boundaries","status":"setup-guide","dependencies":[]},
+    {"id":"computer-control","title_ru":"Подключение управления компьютером","title_en":"Computer control setup","status":"setup-guide","dependencies":[]},
+    {"id":"secret-storage","title_ru":"Настройка защищённого хранения","title_en":"Secret storage setup","status":"setup-guide","dependencies":[]},
+    {"id":"remote-access","title_ru":"Доступ с других устройств (проектирование)","title_en":"Access from other devices (design)","status":"planned","dependencies":[]}
+  ]
+}
