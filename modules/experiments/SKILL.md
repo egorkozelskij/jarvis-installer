@@ -9,16 +9,10 @@ below only for its stated scope.
 
 ## Choose the mode
 
-| Mode | Default | Budget |
-|---|---|---|
-| Ordinary change | Project checks; no benchmark added automatically | Part of acceptance |
-| Hypothesis | Paired baseline vs candidate, 1–3 related scenarios, 1–2 sizes | about 5 minutes |
-| Final check | Predefined matrix of correctness, regressions and needed metrics | about 60 minutes |
-| Extended research | Multi-hour comparison, competitors, many environments | Only on explicit owner request |
-
-A request to "make it faster" or "beat competitors" does not by itself allow a
-multi-hour run. Normal cycle: baseline → narrow hypotheses → one candidate →
-one final check.
+Read `modules/engineering/references/testing-and-benchmarks.md` for the canonical
+budgets, matrix, stop conditions and report contract. It owns
+DEV-VERIFICATION-BUDGET-001 and DEV-EXPERIMENT-REPORT-001. Project overrides must
+name the rule and exact scope. This procedure does not authorize checks on its own.
 
 ## Before running
 

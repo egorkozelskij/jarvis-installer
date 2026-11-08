@@ -3,9 +3,19 @@ name: jarvis-engineering
 description: Explore, change, review, accept or hand off code work in a registered engineering project using its scoped rules. Classify the assignment first; a request to explore or review grants no right to edit, commit, publish or deploy.
 ---
 
-Read `core/scopes.md`, then `projects/ID/project.md`, its `governance/README.md`
-and only the rule branch the task touches. A bound source repository may carry
-its own `AGENTS.md`; read it too and report conflicts instead of picking one.
+Read `core/scopes.md` and `core/projects.md`, resolve the card's sources, parent
+chain and section storage. Instance location_mode does not choose project storage.
+Read ancestor/common rules and the target's resolved rules entrypoint, then relevant
+specs; legacy cards retain their explicit binding until authorized migration.
+Never use a reference project's rules as governing rules for the current project.
+Report consequential code/document conflicts before propagating them.
+
+Always read `modules/engineering/references/workflow.md` and
+`modules/engineering/references/specifications.md`. Before permitted checks read
+`modules/engineering/references/testing-and-benchmarks.md`; for long work read
+`core/long-running-agent-work.md`; before an authorized commit read
+`modules/engineering/references/commits.md`. Local profiles retain their commands,
+versions, paths, permissions and explicit scoped overrides.
 
 Classify the assignment before acting and read only its reference:
 

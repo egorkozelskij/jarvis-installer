@@ -106,6 +106,104 @@
   "limits": [
     "one attempt per cell",
     "owner global Codex instruction (no tests without request) loaded in both conditions despite isolation flags",
-    "contract stated in the edited file: detection at ceiling in both conditions"
-  ]
+    "contract stated in the edited file: detection at ceiling in both conditions",
+    "hard fixture: detection also at ceiling; trials test review on explicit request, not whether an agent schedules a review itself"
+  ],
+  "hard": {
+    "fixture": "tests/fixtures/review-trial-hard",
+    "tests_passing_before_and_after": 13,
+    "patch_lines": 108,
+    "contract_location": "docs/contracts.md only (plus project rule in jarvis condition)",
+    "hidden_scenario_tail_candidate": [
+      "4",
+      "2",
+      "0"
+    ],
+    "runs": [
+      {
+        "condition": "plain",
+        "model": "gpt-5.6-luna",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": true,
+        "noticed_peek_after_dispose": false,
+        "cited_rule_id": null,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 5
+      },
+      {
+        "condition": "plain",
+        "model": "gpt-6-luna",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": false,
+        "noticed_peek_after_dispose": true,
+        "cited_rule_id": null,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 3
+      },
+      {
+        "condition": "plain",
+        "model": "gpt-6.1-sol",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": true,
+        "noticed_peek_after_dispose": false,
+        "cited_rule_id": null,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 4
+      },
+      {
+        "condition": "jarvis",
+        "model": "gpt-5.6-luna",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": true,
+        "noticed_peek_after_dispose": false,
+        "cited_rule_id": true,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 6
+      },
+      {
+        "condition": "jarvis",
+        "model": "gpt-6-luna",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": true,
+        "noticed_peek_after_dispose": true,
+        "cited_rule_id": true,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 4
+      },
+      {
+        "condition": "jarvis",
+        "model": "gpt-6.1-sol",
+        "exit_code": 0,
+        "verdict": "do-not-merge",
+        "found_order_violation": true,
+        "opened_contracts_doc": true,
+        "named_missing_scenario": true,
+        "noticed_peek_after_dispose": false,
+        "cited_rule_id": true,
+        "library_modified": false,
+        "tests_run": false,
+        "commands": 8
+      }
+    ]
+  }
 }

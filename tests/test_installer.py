@@ -34,6 +34,12 @@ class InstallerTests(unittest.TestCase):
     def install(self):
         return self.run_cli('install','--target',self.root,'--answers',self.answers)
 
+    def create_project(self, pid, parent=None):
+        args=['projects','--root',self.root,'create','--id',pid,'--title',pid,
+              '--kind','project','--purpose','Synthetic project','--storage','jarvis']
+        if parent: args += ['--parent',parent]
+        return self.run_cli(*args)
+
     def note(self, text, **extra):
         args = ['note','--root',self.root,'--scope',extra.pop('scope','personal'),'--id','style',
                 '--text',text,'--source','Fictional owner, current test']
@@ -102,13 +108,11 @@ class InstallerTests(unittest.TestCase):
 
     def test_project_scope_and_correction(self):
         self.install()
-        for pid in ('atlas','studio'):
-            self.run_cli('project','--root',self.root,'--id',pid,'--title',pid)
+        for pid in ('atlas','studio'): self.create_project(pid)
         self.note('Use npm',scope='project:atlas'); self.note('Use pnpm',scope='project:atlas')
         text=(self.root/'projects/atlas/notes/style.md').read_text()
         self.assertNotIn('Use npm',text); self.assertIn('Use pnpm',text)
-        found=self.run_cli('search','--root',self.root,'--scope','project:studio','--query','pnpm')
-        self.assertEqual(found['matches'],[])
+        self.assertEqual(self.run_cli('search','--root',self.root,'--scope','project:studio','--query','pnpm')['matches'],[])
         self.assertTrue((self.root/'local/corrections/project-atlas/style.jsonl').exists())
 
     def test_memory_modes_and_task_local(self):
@@ -190,20 +194,80 @@ class InstallerTests(unittest.TestCase):
         self.assertTrue((self.root/'modules/experiments/templates/experiment-plan.md').is_file())
         self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
 
-    def test_engineering_project_gets_starter_rules(self):
-        self.write_answers({'name':'Alex Fiction','modules':['engineering']}); self.install()
-        self.run_cli('project','--root',self.root,'--id','atlas','--title','Atlas','--kind','engineering')
-        self.run_cli('project','--root',self.root,'--id','studio','--title','Studio','--kind','design')
-        atlas=(self.root/'projects/atlas/governance/README.md').read_text()
-        self.assertIn('modules/engineering/references/rules.md',atlas)
-        studio=(self.root/'projects/studio/governance/README.md').read_text()
-        self.assertNotIn('modules/engineering',studio)
+    def test_registration_and_rule_authoring_are_separate(self):
+        self.write_answers({'modules':['engineering']});self.install();self.create_project('atlas')
+        resolved=self.run_cli('projects','--root',self.root,'resolve','--id','atlas','--section','rules')
+        self.assertFalse(resolved['exists'])
+        self.run_cli('projects','--root',self.root,'resolve','--id','atlas','--section','rules','--create')
+        (self.root/'projects/atlas/rules/README.md').write_text('Project-specific contract')
+        chain=self.run_cli('projects','--root',self.root,'rules','--id','atlas')
+        self.assertTrue(chain['chain'][0]['exists'])
         self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
 
-    def test_engineering_kind_without_module_keeps_plain_rules(self):
-        self.write_answers({'name':'Alex Fiction','modules':['projects']}); self.install()
-        self.run_cli('project','--root',self.root,'--id','atlas','--title','Atlas','--kind','engineering')
-        self.assertNotIn('modules/engineering',(self.root/'projects/atlas/governance/README.md').read_text())
+    def test_legacy_creation_requires_explicit_new_storage_choice(self):
+        self.install()
+        self.run_cli('project','--root',self.root,'--id','atlas','--title','Atlas',ok=False)
+        self.assertFalse((self.root/'projects/atlas').exists())
+        self.create_project('atlas')
+        self.assertEqual(self.run_cli('locate-project','--root',self.root,'--id','atlas')['kind'],'project')
+
+    def test_shared_and_mixed_storage_keep_source_unchanged(self):
+        source=self.base/'project-a';source.mkdir();(source/'sentinel.txt').write_text('keep source unchanged')
+        self.write_answers({'location_mode':'shared','modules':['engineering','search','history','sync'],'memory_mode':'auto'})
+        self.install();self.create_project('project-a')
+        self.run_cli('projects','--root',self.root,'root','--id','external','--path',source)
+        self.run_cli('projects','--root',self.root,'source','--id','project-a','--storage-root','external','--path','.')
+        self.run_cli('projects','--root',self.root,'bind','--id','project-a','--section','notes','--storage-root','external','--path','knowledge/notes')
+        self.note('Project-local decision',scope='project:project-a')
+        self.assertIn('Project-local decision',(source/'knowledge/notes/style.md').read_text())
+        self.assertFalse((self.root/'projects/project-a/notes').exists())
+        self.assertEqual((source/'sentinel.txt').read_text(),'keep source unchanged')
+        snap=self.base/'snapshot';self.run_cli('snapshot','--root',self.root,'--destination',snap)
+        self.assertFalse(any(p.name=='style.md' for p in snap.rglob('*')))
+        self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
+
+    def test_parent_chain_and_storage_are_independent(self):
+        self.install();self.create_project('group');self.create_project('first',parent='group');self.create_project('second')
+        for pid in ['group','first','second']:
+            self.run_cli('projects','--root',self.root,'resolve','--id',pid,'--section','rules','--create')
+            (self.root/f'projects/{pid}/rules/README.md').write_text(pid+' contract')
+        chain=self.run_cli('projects','--root',self.root,'rules','--id','first')
+        self.assertEqual([x['id'] for x in chain['chain']],['group','first'])
+        self.assertNotIn('second',str(chain))
+
+    def test_missing_external_root_never_creates_fallback(self):
+        self.install();self.create_project('atlas')
+        self.run_cli('projects','--root',self.root,'bind','--id','atlas','--section','notes','--storage-root','missing','--path','notes',ok=False)
+        external=self.base/'external';external.mkdir()
+        self.run_cli('projects','--root',self.root,'root','--id','external','--path',external)
+        self.run_cli('projects','--root',self.root,'bind','--id','atlas','--section','notes','--storage-root','external','--path','../escape',ok=False)
+        self.run_cli('projects','--root',self.root,'bind','--id','atlas','--section','notes','--storage-root','external','--path','notes')
+        external.rmdir()
+        self.note('No fallback',scope='project:atlas',ok=False)
+        self.assertFalse((self.root/'projects/atlas/notes').exists())
+        self.assertFalse(self.run_cli('doctor','--root',self.root,ok=False)['ok'])
+
+    def test_folder_stays_self_contained_and_mode_change_preserves_knowledge(self):
+        self.install()
+        self.create_project('atlas')
+        self.note('Keep project decision',scope='project:atlas')
+        route=self.run_cli('locate-project','--root',self.root,'--id','atlas')
+        self.assertEqual(route['sections']['notes'],str(self.root/'projects/atlas/notes'));self.assertTrue(route['ready'])
+        self.assertFalse((self.root/'.jarvis').exists())
+        self.write_answers({'location_mode':'shared'})
+        self.run_cli('install','--target',self.root,'--answers',self.answers,ok=False)
+        self.assertEqual(json.loads((self.root/'config/instance.json').read_text())['location_mode'],'folder')
+        self.assertIn('Keep project decision',(self.root/'projects/atlas/notes/style.md').read_text())
+
+    def test_legacy_project_is_locatable_without_automatic_migration(self):
+        self.install()
+        old=self.root/'projects/legacy';(old/'governance').mkdir(parents=True)
+        (old/'project.md').write_text('Old project')
+        (old/'governance/README.md').write_text('Keep old rules')
+        route=self.run_cli('locate-project','--root',self.root,'--id','legacy')
+        self.assertTrue(route['legacy']);self.assertTrue(route['ready'])
+        self.assertEqual(Path(route['entrypoint']).read_text(),'Keep old rules')
+        self.assertFalse((old/'project.json').exists())
 
     def test_machine_queue_is_deferred_not_installed(self):
         self.write_answers({'name':'Alex Fiction','modules':['machine-queue']}); self.install()
@@ -219,6 +283,141 @@ class InstallerTests(unittest.TestCase):
             for doc in (SOURCE/'modules'/mid).rglob('*.md'):
                 for link in re.findall(r'(?<![\w/])((?:modules|core)/[\w./-]+\.md)',doc.read_text()):
                     self.assertTrue((SOURCE/link).is_file(), f'{doc.name}: {link}')
+
+
+    def test_thematic_sections_correct_and_forget_only_selected_topic(self):
+        self.install();self.note('Preference one',section='preferences');self.note('Work state',section='context')
+        self.note('Preference corrected',section='preferences')
+        pref=self.root/'knowledge/personal/preferences/style.md'
+        self.assertIn('Preference corrected',pref.read_text());self.assertNotIn('Preference one',pref.read_text())
+        self.assertIn('Preference one',(self.root/'local/corrections/personal/preferences/style.jsonl').read_text())
+        self.run_cli('forget','--root',self.root,'--scope','personal','--section','preferences','--id','style','--explicit')
+        self.assertFalse(pref.exists());self.assertTrue((self.root/'knowledge/personal/context/style.md').exists())
+        active=self.root/'knowledge/personal/context/active.md';active.write_text('Owner current index')
+        self.write_answers({'modules':['search']});self.install()
+        self.assertEqual(active.read_text(),'Owner current index')
+
+    def test_structured_archive_requires_choice_and_preserves_first_import(self):
+        self.install();source=self.base/'chunk.md';source.write_text('Synthetic message id 1')
+        args=['archive','--root',self.root,'--scope','personal','--file',source,
+              '--source-id','codex','--chat-id','chat_1','--date','2026-11-02']
+        self.run_cli(*args,ok=False)
+        self.write_answers({'module_options':{'history':{'capture':'available-chats'}}});self.install()
+        first=self.run_cli(*args);path=self.root/first['archived'];raw=path.read_bytes()
+        self.assertIn('codex/chat_1/2026-11-02--',first['archived'])
+        pending=self.run_cli('sync-status','--root',self.root)['pending_changes']
+        second=self.run_cli(*args)
+        self.assertFalse(second['written']);self.assertEqual(raw,path.read_bytes())
+        self.assertEqual(pending,self.run_cli('sync-status','--root',self.root)['pending_changes'])
+        bad=list(args);bad[bad.index('chat_1')]='../escape';self.run_cli(*bad,ok=False)
+
+    def test_custom_skill_registry_survives_reconfiguration(self):
+        self.write_answers({'modules':['skill-management','sync']});self.install()
+        folder=self.root/'skills/custom';folder.mkdir(parents=True);(folder/'SKILL.md').write_text('Custom original')
+        args=['skills','--root',self.root]
+        self.run_cli(*args,'register','--id','custom','--owner','jarvis','--source-root','jarvis','--source-path','skills/custom','--link','jarvis:.agents/skills/custom')
+        self.run_cli(*args,'sync');self.assertTrue(self.run_cli(*args,'audit')['issues']==[])
+        self.assertEqual((self.root/'.agents/skills/custom').resolve(),folder)
+        self.write_answers({'communication_style':'Owner preference'});self.install()
+        self.assertEqual((self.root/'.agents/skills/custom').resolve(),folder)
+        self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
+        snap=self.base/'with-links';self.run_cli('snapshot','--root',self.root,'--destination',snap)
+        self.assertEqual((snap/'skills/custom/SKILL.md').read_text(),'Custom original')
+        self.assertTrue((snap/'config/skill-bindings.json').exists())
+        self.assertFalse((snap/'.agents/skills/custom').exists())
+        (self.root/'.agents/skills/custom').unlink();(self.root/'.agents/skills/custom').write_text('Foreign file')
+        self.assertTrue(self.run_cli(*args,'sync',ok=False)['issues'])
+        self.assertEqual((self.root/'.agents/skills/custom').read_text(),'Foreign file')
+
+    def test_doctor_detects_changed_discovery_copy(self):
+        self.install();(self.root/'.agents/skills/jarvis-projects/SKILL.md').write_text('Changed copy')
+        result=self.run_cli('doctor','--root',self.root,ok=False)
+        self.assertFalse(result['ok']);self.assertTrue(result['skills']['issues'])
+
+    def test_section_transfer_keeps_source_until_verified_finalize(self):
+        self.install();self.create_project('atlas');self.note('Preserve during move',scope='project:atlas')
+        ext=self.base/'external';ext.mkdir()
+        self.run_cli('projects','--root',self.root,'root','--id','external','--path',ext)
+        result=self.run_cli('projects','--root',self.root,'move-section','--id','atlas','--section','notes','--storage-root','external','--path','notes','--confirm')
+        self.assertTrue((self.root/'projects/atlas/notes/style.md').exists())
+        self.assertEqual((self.root/'projects/atlas/notes/style.md').read_bytes(),(ext/'notes/style.md').read_bytes())
+        self.run_cli('projects','--root',self.root,'finalize-transfer','--journal',result['journal'],'--confirm')
+        self.assertFalse((self.root/'projects/atlas/notes').exists());self.assertTrue((ext/'notes/style.md').exists())
+
+    def test_upgrade_from_published_v010_preserves_owner_data(self):
+        import tarfile,io
+        raw=subprocess.check_output(['git','-C',str(SOURCE),'archive','44af187dd583c179b86192e497f107d47161afac'])
+        old=self.base/'v010';old.mkdir()
+        with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
+            for item in archive.getmembers():
+                dest=old/item.name
+                if item.isfile():
+                    self.assertTrue(dest.resolve().is_relative_to(old))
+                    dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(archive.extractfile(item).read())
+        proc=subprocess.run([sys.executable,str(old/'bootstrap/scripts/jarvis.py'),'install','--target',str(self.root),'--answers',str(self.answers)],capture_output=True,text=True)
+        self.assertEqual(proc.returncode,0,proc.stderr)
+        note=self.root/'knowledge/personal/notes/owner.md';note.parent.mkdir(parents=True);note.write_text('Owner data from 0.1')
+        self.install();self.assertEqual(note.read_text(),'Owner data from 0.1')
+        self.assertEqual(json.loads((self.root/'config/installation.json').read_text())['version'],'0.4.0')
+        self.assertTrue(self.run_cli('doctor','--root',self.root)['ok'])
+
+
+
+    def test_custom_skill_update_keeps_one_original_and_respects_lock(self):
+        self.install()
+        for name in ['before','after']:
+            folder=self.root/'skills'/name;folder.mkdir(parents=True);(folder/'SKILL.md').write_text('Original '+name)
+        args=['skills','--root',self.root]
+        self.run_cli(*args,'register','--id','custom','--owner','jarvis','--source-root','jarvis','--source-path','skills/before','--link','jarvis:.agents/skills/custom')
+        self.run_cli(*args,'sync')
+        lock=self.root/'local/install.lock';lock.write_text('another writer')
+        self.run_cli(*args,'update','--id','custom','--owner','jarvis','--source-root','jarvis','--source-path','skills/after','--link','jarvis:.agents/skills/custom',ok=False)
+        self.assertEqual((self.root/'.agents/skills/custom').resolve(),self.root/'skills/before');lock.unlink()
+        self.run_cli(*args,'update','--id','custom','--owner','jarvis','--source-root','jarvis','--source-path','skills/after','--link','jarvis:.agents/skills/custom')
+        self.assertEqual((self.root/'.agents/skills/custom').resolve(),self.root/'skills/after')
+        self.assertEqual(self.run_cli(*args,'audit')['issues'],[])
+        self.assertTrue((self.root/'skills/before/SKILL.md').exists())
+
+    def test_structured_project_archive_uses_assigned_assets(self):
+        self.write_answers({'modules':['projects','history'],'module_options':{'history':{'capture':'available-chats'}}});self.install();self.create_project('atlas')
+        ext=self.base/'project-assets';ext.mkdir()
+        self.run_cli('projects','--root',self.root,'root','--id','assets','--path',ext)
+        self.run_cli('projects','--root',self.root,'bind','--id','atlas','--section','assets','--storage-root','assets','--path','.')
+        text=self.base/'chunk.md';text.write_text('Synthetic project message')
+        args=['archive','--root',self.root,'--scope','project:atlas','--file',text,'--source-id','codex','--chat-id','chat1','--date','2026-11-02']
+        result=self.run_cli(*args);self.assertTrue(Path(result['archived']).is_relative_to(ext/'conversations/codex/chat1'))
+        self.assertFalse(self.run_cli(*args)['written'])
+        self.assertFalse((self.root/'projects/atlas/assets').exists())
+
+
+
+    def test_snapshot_preserves_thematic_inbox_as_owner_knowledge(self):
+        self.install();self.note('Needs classification',section='inbox')
+        (self.root/'inbox/untrusted.md').write_text('Unreviewed incoming package')
+        snap=self.base/'thematic-snapshot';self.run_cli('snapshot','--root',self.root,'--destination',snap)
+        self.assertIn('Needs classification',(snap/'knowledge/personal/inbox/style.md').read_text())
+        self.assertFalse((snap/'inbox').exists())
+
+
+
+    def test_skill_commands_refuse_unconfigured_root(self):
+        foreign=self.base/'foreign';(foreign/'skills/custom').mkdir(parents=True)
+        (foreign/'skills/custom/SKILL.md').write_text('Unregistered project original')
+        self.run_cli('skills','--root',foreign,'register','--id','custom','--owner','jarvis','--source-root','jarvis','--source-path','skills/custom',ok=False)
+        self.assertFalse((foreign/'config').exists());self.assertFalse((foreign/'local').exists())
+
+
+
+    def test_review_fixture_setup_uses_current_schema_without_running_models(self):
+        import review_trial
+        folder=self.base/'trial'
+        review_trial.setup(folder,['gpt-6.1-sol'],'review-trial')
+        current=folder/'jarvis/gpt-6.1-sol/instance'
+        card=json.loads((current/'projects/atlas/project.json').read_text())
+        self.assertEqual(card['schema_version'],2)
+        self.assertEqual(card['sources'],[{'root':'trial-source','path':'.'}])
+        self.assertIn('CORE-CLEANUP-ORDER-001',(current/'projects/atlas/rules/README.md').read_text())
+        self.assertFalse(any(folder.rglob('answer.txt')));self.assertFalse(any(folder.rglob('events.jsonl')))
 
 
 if __name__=='__main__': unittest.main()
