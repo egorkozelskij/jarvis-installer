@@ -1,16 +1,20 @@
 """Synthetic review trial for the engineering module (opt-in, not unit tests).
 
-A small library passes all 11 tests with and without `candidate.patch`, but the
+A small library passes all tests with and without `candidate.patch`, but the
 patch changes the documented disposal order when a neighbour consumer is alive.
+Fixture `review-trial` states the contract at the top of the edited file;
+`review-trial-hard` keeps it only in `docs/contracts.md` and hides the change
+in a larger diff (rename, new `peek()` and its tests).
 Each model reviews the patch twice: in a plain folder and with a Jarvis
 instance (engineering preset, project rule CORE-CLEANUP-ORDER-001). The hidden
-scenario in `fixtures/review-trial/hidden_scenario.py` is never shown to agents.
+scenario `hidden_scenario.py` in each fixture is never shown to agents.
 
-    python3 tests/review_trial.py setup --base /absolute/empty/dir
+    python3 tests/review_trial.py setup --base /absolute/empty/dir [--fixture review-trial-hard]
     python3 tests/review_trial.py run --base /absolute/empty/dir --cli /path/to/codex
 
 Requires an authenticated Codex CLI. Read the answers yourself: process success
-is not behavioral acceptance.
+is not behavioral acceptance. Setup uses the current distribution and schema 2;
+historical trial results refer to their recorded source snapshots.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -22,26 +26,26 @@ import subprocess
 import sys
 
 HERE = Path(__file__).resolve().parent
-FIXTURE = HERE / 'fixtures/review-trial'
+FIXTURES = ['review-trial', 'review-trial-hard']
 INSTALLER = HERE.parent / 'bootstrap/scripts/jarvis.py'
 MODELS = ['gpt-5.6-luna', 'gpt-6-luna', 'gpt-6.1-sol']
 CONDITIONS = ['plain', 'jarvis']
-PLACEHOLDER = ('None yet. Add rules from `modules/engineering/templates/rule.md` when a real,\n'
-               'repeated problem needs one.')
+
 
 
 def cli(*args):
     subprocess.run([sys.executable, *map(str, args)], check=True, capture_output=True)
 
 
-def setup(base, models):
+def setup(base, models, fixture):
+    FIXTURE = HERE / 'fixtures' / fixture
     for cond in CONDITIONS:
         for model in models:
             d = base / cond / model
             d.mkdir(parents=True)
             shutil.copytree(FIXTURE / 'atlas-core', d / 'atlas-core')
             git = ['git', '-C', str(d / 'atlas-core'), '-c', 'user.name=Fixture',
-                   '-c', 'user.email=fixture@example.invalid']
+                   '-c', 'user.email=fixture@example.invalid', '-c', 'core.hooksPath=/dev/null']
             subprocess.run(['git', 'init', '-q', '-b', 'main', str(d / 'atlas-core')], check=True)
             subprocess.run(git + ['add', '-A'], check=True)
             subprocess.run(git + ['commit', '-qm', 'feat(core): dependency graph with ordered disposal'], check=True)
@@ -56,17 +60,20 @@ def setup(base, models):
                     modules=['projects', 'search', 'engineering', 'experiments'])))
                 cli(INSTALLER, 'install', '--target', d / 'instance', '--answers', answers)
                 answers.unlink()
-                cli(d / 'instance/bootstrap/scripts/jarvis.py', 'project', '--root', d / 'instance',
-                    '--id', 'atlas', '--title', 'Atlas', '--kind', 'engineering')
-                project = d / 'instance/projects/atlas/project.md'
-                project.write_text(project.read_text()
-                                   .replace('Purpose: to be clarified with owner.', 'Purpose: reactive dependency graph library.')
-                                   .replace('Source repository: unbound.', 'Source repository: ../atlas-core (relative to the instance root).'))
-                rules = d / 'instance/projects/atlas/governance/README.md'
-                text = rules.read_text()
-                if PLACEHOLDER not in text:
-                    raise ValueError('Unexpected starter rules template')
-                rules.write_text(text.replace(PLACEHOLDER, (FIXTURE / 'rule.md').read_text().strip()))
+                installed = d / 'instance/bootstrap/scripts/jarvis.py'
+                cli(installed, 'projects', '--root', d / 'instance', 'create',
+                    '--id', 'atlas', '--title', 'Atlas', '--kind', 'project',
+                    '--purpose', 'Synthetic reactive dependency graph library', '--storage', 'jarvis')
+                cli(installed, 'projects', '--root', d / 'instance', 'root',
+                    '--id', 'trial-source', '--path', d / 'atlas-core')
+                cli(installed, 'projects', '--root', d / 'instance', 'source',
+                    '--id', 'atlas', '--storage-root', 'trial-source', '--path', '.')
+                cli(installed, 'projects', '--root', d / 'instance', 'resolve',
+                    '--id', 'atlas', '--section', 'rules', '--create')
+                rules = d / 'instance/projects/atlas/rules/README.md'
+                rules.write_text('# Atlas rules\n\nRead modules/engineering/SKILL.md from the instance root.\n\n'
+                                 + (FIXTURE / 'rule.md').read_text())
+
 
 
 def run(base, codex, models):
@@ -106,12 +113,13 @@ if __name__ == '__main__':
     parser.add_argument('--base', type=Path, required=True)
     parser.add_argument('--cli')
     parser.add_argument('--model', choices=MODELS, action='append')
+    parser.add_argument('--fixture', choices=FIXTURES, default='review-trial')
     args = parser.parse_args()
     base = args.base.resolve()
     if args.action == 'setup':
         if base.exists() and any(base.iterdir()):
             sys.exit('Base must be a new or empty directory')
-        setup(base, args.model or MODELS)
+        setup(base, args.model or MODELS, args.fixture)
     else:
         if not args.cli:
             sys.exit('--cli is required for run')

@@ -1,0 +1,42 @@
+test_active_lock_is_not_broken (test_installer.InstallerTests.test_active_lock_is_not_broken) ... ok
+test_archive_untrusted_data_and_scoped_search (test_installer.InstallerTests.test_archive_untrusted_data_and_scoped_search) ... ok
+test_custom_skill_registry_survives_reconfiguration (test_installer.InstallerTests.test_custom_skill_registry_survives_reconfiguration) ... ok
+test_custom_skill_update_keeps_one_original_and_respects_lock (test_installer.InstallerTests.test_custom_skill_update_keeps_one_original_and_respects_lock) ... ok
+test_dependencies_deferred_module_and_unknown_answers (test_installer.InstallerTests.test_dependencies_deferred_module_and_unknown_answers) ... ok
+test_disable_module_preserves_knowledge_and_custom_skill (test_installer.InstallerTests.test_disable_module_preserves_knowledge_and_custom_skill) ... ok
+test_doctor_detects_changed_discovery_copy (test_installer.InstallerTests.test_doctor_detects_changed_discovery_copy) ... ok
+test_engineering_modules_install_with_dependencies (test_installer.InstallerTests.test_engineering_modules_install_with_dependencies) ... ok
+test_folder_stays_self_contained_and_mode_change_preserves_knowledge (test_installer.InstallerTests.test_folder_stays_self_contained_and_mode_change_preserves_knowledge) ... ok
+test_installed_cli_operates_on_its_own_instance (test_installer.InstallerTests.test_installed_cli_operates_on_its_own_instance) ... ok
+test_legacy_creation_requires_explicit_new_storage_choice (test_installer.InstallerTests.test_legacy_creation_requires_explicit_new_storage_choice) ... ok
+test_legacy_project_is_locatable_without_automatic_migration (test_installer.InstallerTests.test_legacy_project_is_locatable_without_automatic_migration) ... ok
+test_machine_queue_is_deferred_not_installed (test_installer.InstallerTests.test_machine_queue_is_deferred_not_installed) ... ok
+test_memory_modes_and_task_local (test_installer.InstallerTests.test_memory_modes_and_task_local) ... ok
+test_missing_external_root_never_creates_fallback (test_installer.InstallerTests.test_missing_external_root_never_creates_fallback) ... ok
+test_modified_managed_file_blocks_update_without_partial_changes (test_installer.InstallerTests.test_modified_managed_file_blocks_update_without_partial_changes) ... ok
+test_parent_chain_and_storage_are_independent (test_installer.InstallerTests.test_parent_chain_and_storage_are_independent) ... ok
+test_pending_is_not_remote_delivery_and_snapshot_excludes_local (test_installer.InstallerTests.test_pending_is_not_remote_delivery_and_snapshot_excludes_local) ... ok
+test_plan_does_not_write_and_install_doctor (test_installer.InstallerTests.test_plan_does_not_write_and_install_doctor) ... ok
+test_presets_and_module_links_resolve (test_installer.InstallerTests.test_presets_and_module_links_resolve) ... ok
+test_project_scope_and_correction (test_installer.InstallerTests.test_project_scope_and_correction) ... ok
+test_refuse_foreign_directory_without_touching (test_installer.InstallerTests.test_refuse_foreign_directory_without_touching) ... ok
+test_registration_and_rule_authoring_are_separate (test_installer.InstallerTests.test_registration_and_rule_authoring_are_separate) ... ok
+test_review_fixture_setup_uses_current_schema_without_running_models (test_installer.InstallerTests.test_review_fixture_setup_uses_current_schema_without_running_models) ... ok
+test_secrets_and_excluded_topics (test_installer.InstallerTests.test_secrets_and_excluded_topics) ... ok
+test_section_transfer_keeps_source_until_verified_finalize (test_installer.InstallerTests.test_section_transfer_keeps_source_until_verified_finalize) ... ok
+test_shared_and_mixed_storage_keep_source_unchanged (test_installer.InstallerTests.test_shared_and_mixed_storage_keep_source_unchanged) ... ok
+test_skill_commands_refuse_unconfigured_root (test_installer.InstallerTests.test_skill_commands_refuse_unconfigured_root) ... ok
+test_snapshot_preserves_thematic_inbox_as_owner_knowledge (test_installer.InstallerTests.test_snapshot_preserves_thematic_inbox_as_owner_knowledge) ... ok
+test_snapshot_refuses_unsafe_destinations_and_detected_secrets (test_installer.InstallerTests.test_snapshot_refuses_unsafe_destinations_and_detected_secrets) ... ok
+test_structured_archive_requires_choice_and_preserves_first_import (test_installer.InstallerTests.test_structured_archive_requires_choice_and_preserves_first_import) ... ok
+test_structured_project_archive_uses_assigned_assets (test_installer.InstallerTests.test_structured_project_archive_uses_assigned_assets) ... ok
+test_symlink_target_refused (test_installer.InstallerTests.test_symlink_target_refused) ... ok
+test_thematic_sections_correct_and_forget_only_selected_topic (test_installer.InstallerTests.test_thematic_sections_correct_and_forget_only_selected_topic) ... ok
+test_traversal_and_symlink_write_escape (test_installer.InstallerTests.test_traversal_and_symlink_write_escape) ... ok
+test_update_preserves_data_and_unselected_settings (test_installer.InstallerTests.test_update_preserves_data_and_unselected_settings) ... ok
+test_upgrade_from_published_v010_preserves_owner_data (test_installer.InstallerTests.test_upgrade_from_published_v010_preserves_owner_data) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 6.796s
+
+OK

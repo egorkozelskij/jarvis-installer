@@ -3,8 +3,8 @@
   "language": "ru",
   "location_mode": "folder",
   "modules": ["personal-memory", "projects", "search"],
-  "memory_mode": "auto",
-  "autonomy": "within-instance",
+  "memory_mode": "on-request",
+  "autonomy": "ask",
   "excluded_topics": [],
   "communication_style": "Кратко, с объяснением важных ограничений"
 }

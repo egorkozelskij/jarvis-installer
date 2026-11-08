@@ -1,27 +1,24 @@
-# Структура и владение
+# Структура Jarvis
 
-`AGENTS.md` is a short entrypoint, not the whole manual. `config/instance.json`
-records owner choices, scopes, consent and installed capabilities. It contains
-no credentials. `config/installation.json` records managed file hashes and the
-distribution version; it is a receipt, not user knowledge.
+Общий контракт проектов, групп, памяти и ПО: [projects.md](projects.md).
 
-Distribution: `bootstrap`, `core`, `modules`, `presets`, `adapters`, `templates`.
-Instance: the same relevant components plus user-owned data as needed:
+- `core/` — общие правила работы агента.
+- `modules/` — канонические навыки и их ресурсы.
+- `config/instance.json` — выбор возможностей, памяти и автономности владельцем.
+- `config/project-roots.json` — адреса внешних хранилищ, без marker-файлов в проектах.
+- `projects/<id>/project.json` — карточки schema 2; project.md — назначение и навигация.
+- `projects/<id>/{rules,skills,specs,test-specs,notes,assets,reports,software}` — стандартные разделы либо явные внешние назначения в карточке.
+- `software/` — ПО общего назначения; проекты и группы имеют собственный раздел software.
+- `automations/` — поручения task.md и состояние state.md; расписание принадлежит внешнему исполнителю.
+- `config/skill-bindings.json` — оригиналы навыков и производное discovery; `bootstrap/scripts/skills.py` — регистрация и проверка.
+- `knowledge/personal/` — личные сведения, не копии проектных решений.
+- `archive/conversations/` — исходные разговоры с границами покрытия.
+- `local/` — техническое состояние, журналы переносов и recovery copies. Значимые единственные данные не считать cache.
+- `local/secrets/` — необязательное исключённое хранилище доступов этого владельца; вместо него может использоваться системный credential manager. Порядок выбора ресурса — [core/access.md](access.md), ограничения — [permissions.md](permissions.md). Ключи, аккаунты и каталоги доступов исходного владельца не устанавливаются.
+- `notes/discussions/` и `assets/discussions/` выбранной группы/проекта — датированные обсуждения и исходные материалы по [общей конвенции](discussions.md), внутри существующих разделов карточки.
 
-- `knowledge/personal`: owner facts, preferences, life areas, goals, contacts.
-- `projects/<stable-id>`: project description, governance, decisions, assets.
-- `assets`: shared attachments, not credentials.
-- `archive/conversations`: optional imported conversation sources.
-- `inbox`: untrusted incoming material, outside automatic skill discovery.
-- `vault`: optional encrypted payloads; encryption setup is not implemented yet.
-- `local`: device-specific state, indexes, secrets and caches; always ignored.
-- `.agents/skills`: generated discovery copies; edit canonical module sources.
+Физический каталог карточек плоский. Тип project/group влияет только на отображение. Исходники необязательны и независимы от хранения знаний. Место размещения выбирается для проекта, а отдельные разделы могут его переопределять. Symlinks — производная навигация.
 
-Create a folder when it has a consumer, not a folder for every imaginable topic.
-Knowledge and project documents have one canonical location; navigation links
-refer there. Do not place project rules in personal preferences or duplicate a
-whole source tree in the assistant. Project source paths are optional bindings.
+`location_mode: folder|shared` описывает размещение экземпляра Jarvis, а не принудительное место знаний каждого проекта schema 2. Старые карточки schema 1 читаются по прежнему explicit binding до отдельной миграции. Не преобразовывать и не переносить их молча.
 
-The installer only writes inside its explicit target. "Shared" means one
-owner's instance used by selected projects, not a system-wide installation.
-It does not edit other projects' AGENTS.md or any global configuration.
+Дистрибутив содержит core, modules, bootstrap, adapters и templates. При установке не переносить пользовательские карточки, секреты, истории и проекты экземпляра. Установка не меняет глобальные настройки клиента и внешние папки без поручения.

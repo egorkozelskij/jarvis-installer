@@ -1,4 +1,5 @@
-# Project
+# {{title}}
 
-Describe the purpose, owner, source location if any, current state and links to
-project-specific rules. Do not infer another project's rules from similarity.
+ID: `{{id}}`. Актуальные свойства и адреса — project.json.
+
+Опишите назначение. Разделы: rules, skills, specs, test-specs, notes, assets, reports, software. Перед чтением/записью разрешить назначения по core/projects.md.

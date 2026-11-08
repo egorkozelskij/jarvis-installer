@@ -1,0 +1,108 @@
+diff --git a/atlas_core/graph.py b/atlas_core/graph.py
+index e3494e3..9b9efba 100644
+--- a/atlas_core/graph.py
++++ b/atlas_core/graph.py
+@@ -18,6 +18,16 @@ class Source:
+     def _subscribe(self, consumer):
+         self._subscribers.append(consumer)
+ 
++    def peek(self):
++        """Return the current value without subscribing the caller."""
++        return self._value
++
++    def _detach_exclusive(self, consumer):
++        # Single subscriber: drop the list without a remove scan.
++        self._subscribers.clear()
++        if self._on_release is not None:
++            self._on_release(self, consumer)
++
+     def _unsubscribe(self, consumer):
+         self._subscribers.remove(consumer)
+         if self._on_release is not None:
+@@ -27,7 +37,7 @@ class Source:
+ class Computed:
+     def __init__(self, fn):
+         self._fn = fn
+-        self._deps = []
++        self._sources = []
+         self._cleanups = []
+         self._dirty = True
+         self._value = None
+@@ -36,6 +46,10 @@ class Computed:
+     def on_cleanup(self, handler):
+         self._cleanups.append(handler)
+ 
++    def peek(self):
++        """Return the last computed value without recomputing."""
++        return self._value
++
+     @property
+     def value(self):
+         if self._disposed:
+@@ -53,13 +67,13 @@ class Computed:
+             return source._value
+ 
+         self._value = self._fn(read)
+-        for source in self._deps:
++        for source in self._sources:
+             if source not in seen:
+                 source._unsubscribe(self)
+         for source in seen:
+-            if source not in self._deps:
++            if source not in self._sources:
+                 source._subscribe(self)
+-        self._deps = seen
++        self._sources = seen
+         self._dirty = False
+ 
+     def dispose(self):
+@@ -67,12 +81,18 @@ class Computed:
+             return
+         self._disposed = True
+         errors = []
+-        for source in reversed(self._deps):
++        # Release exclusively owned sources first through the fast path; they
++        # cannot affect other consumers. Reverse order is kept within each group.
++        ordered = sorted(reversed(self._sources), key=lambda s: len(s._subscribers) > 1)
++        for source in ordered:
+             try:
+-                source._unsubscribe(self)
++                if len(source._subscribers) == 1:
++                    source._detach_exclusive(self)
++                else:
++                    source._unsubscribe(self)
+             except Exception as exc:  # collected, disposal continues
+                 errors.append(exc)
+-        self._deps = []
++        self._sources = []
+         for handler in reversed(self._cleanups):
+             try:
+                 handler()
+diff --git a/tests/test_graph.py b/tests/test_graph.py
+index e0ed17b..583473e 100644
+--- a/tests/test_graph.py
++++ b/tests/test_graph.py
+@@ -100,6 +100,23 @@ class GraphTests(unittest.TestCase):
+         sources[1].set(100)
+         self.assertEqual(c.value, (2016 + 99) * 2 + 100)
+ 
++    def test_source_peek_does_not_subscribe(self):
++        a, b = Source('a', 1), Source('b', 2)
++        c = Computed(lambda read: read(a) + b.peek())
++        self.assertEqual(c.value, 3)
++        self.assertEqual(b._subscribers, [])
++        b.set(10)
++        self.assertEqual(c.value, 3)
++
++    def test_computed_peek_returns_cached_value(self):
++        a = Source('a', 1)
++        c = Computed(lambda read: read(a) * 2)
++        self.assertIsNone(c.peek())
++        self.assertEqual(c.value, 2)
++        a.set(5)
++        self.assertEqual(c.peek(), 2)
++        self.assertEqual(c.value, 10)
++
+ 
+ if __name__ == '__main__':
+     unittest.main()

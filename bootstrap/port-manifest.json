@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "distribution_version": "0.4.0",
+  "source_commit": "d177b7d0c6bdefd711d2fede28cd7c0fdacd89ef",
+  "files": [
+    {
+      "source": "core/README.md",
+      "destination": "core/README.md",
+      "source_sha256": "4925cd5e1a08f117dabe9150459c216366f3cfb16d72b215fe8f4720c798683e",
+      "distribution_sha256": "e43610fa864b83e24fc92d6b87ba3102cd5a3cbc57d2e4244978e5d39a54528f",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/agent-communication.md",
+      "destination": "core/agent-communication.md",
+      "source_sha256": "c0d8505ef1407f49107025d5d745ff3afb988b1d4fdc8e27f153c0a81b4a46d8",
+      "distribution_sha256": "c0d8505ef1407f49107025d5d745ff3afb988b1d4fdc8e27f153c0a81b4a46d8",
+      "mode": "identical"
+    },
+    {
+      "source": "core/decisions.md",
+      "destination": "core/decisions.md",
+      "source_sha256": "e3c7a9a2015a955227f91bc2801a2bec85dfff29a8e5d8c8fad955f4837daedf",
+      "distribution_sha256": "e3c7a9a2015a955227f91bc2801a2bec85dfff29a8e5d8c8fad955f4837daedf",
+      "mode": "identical"
+    },
+    {
+      "source": "core/documentation.md",
+      "destination": "core/documentation.md",
+      "source_sha256": "87b7cc900de948c7da3d77ef6094cc63312449710fe8ba4aa75b74dcb65bf3ce",
+      "distribution_sha256": "87b7cc900de948c7da3d77ef6094cc63312449710fe8ba4aa75b74dcb65bf3ce",
+      "mode": "identical"
+    },
+    {
+      "source": "core/layout.md",
+      "destination": "core/layout.md",
+      "source_sha256": "1cd0baa6ce13846fee0a1fd6c21b47ecf635cf919eeb5698122d28e03465b1b8",
+      "distribution_sha256": "6c9dce2ee1e8b1bbf2d9af11e65f1f1b39e4e888f157a5ba23d9f8110a61ce8c",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/long-running-agent-work.md",
+      "destination": "core/long-running-agent-work.md",
+      "source_sha256": "dc9a5595297eed0c5f6eb2354004bfa3cb7b87c11ae1c76ea5d3f7e155a55e23",
+      "distribution_sha256": "a2722f5d2a344dc651a43522ef5e5d7c8d8922af1c0c8bd88696e1b2adfcba37",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/maintenance.md",
+      "destination": "core/maintenance.md",
+      "source_sha256": "c704824bae39fac1e041f1c0e5c9a4708c29eb4104b37cf962e5a725ac835d12",
+      "distribution_sha256": "8e1061a1714ac78c3628454a6530d70d05ffc0e451fe6f9e098dce3813724dcf",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/memory.md",
+      "destination": "core/memory.md",
+      "source_sha256": "381c0bb054ee2136a5cf8f3ee45bf440ab88100ff799f2d264fcb53ecfe454c9",
+      "distribution_sha256": "69352e4ea5564b9dfadf346db03441fed129bcd678f5ec6d9ac354e02c841b8f",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/projects.md",
+      "destination": "core/projects.md",
+      "source_sha256": "0f96e9f86031d1d7f75aeae803b11fc60f445679f28c7361f887774049362bf8",
+      "distribution_sha256": "0f96e9f86031d1d7f75aeae803b11fc60f445679f28c7361f887774049362bf8",
+      "mode": "identical"
+    },
+    {
+      "source": "core/scopes.md",
+      "destination": "core/scopes.md",
+      "source_sha256": "e27464501157e6c41ccdf3a592c3083eee91e31612d759cadb79999297915ec5",
+      "distribution_sha256": "efb8faaba49be0e4de8772b96d97f5d1a52554400da1ba73ceb5afd0d9f17b55",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/skills.md",
+      "destination": "core/skills.md",
+      "source_sha256": "ea2231f5055553b2a3e42be3da6e1bc2a955c5088a2d948d604196d770468383",
+      "distribution_sha256": "83e4e9acd46c9666e36ca2852d0704da397b07bec01458df48d3c46731a0e8cf",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/projects/SKILL.md",
+      "destination": "modules/projects/SKILL.md",
+      "source_sha256": "07894df468d502e94bd61719297c26ccec7b565bf528ab48be2a119820343d8d",
+      "distribution_sha256": "07894df468d502e94bd61719297c26ccec7b565bf528ab48be2a119820343d8d",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/projects/references/card-schema.md",
+      "destination": "modules/projects/references/card-schema.md",
+      "source_sha256": "49526594e7a8151b2969ab81da6912ed9cd6e8d31b3b069161cc3caa293bd627",
+      "distribution_sha256": "49526594e7a8151b2969ab81da6912ed9cd6e8d31b3b069161cc3caa293bd627",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/SKILL.md",
+      "destination": "modules/engineering/SKILL.md",
+      "source_sha256": "1f7e0bcc4f0ac08b6e297b91ff5f0411b7a7660e551763f6e1f648e1310a242c",
+      "distribution_sha256": "74332b5e4aca0433f4dd4604845fa921859bb907e20cafe589e464ff34594fcf",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/engineering/references/acceptance.md",
+      "destination": "modules/engineering/references/acceptance.md",
+      "source_sha256": "c3a7c0cd60a7c12952406c6d633d9a47e37de936456732e5415f81da954f3fef",
+      "distribution_sha256": "c3a7c0cd60a7c12952406c6d633d9a47e37de936456732e5415f81da954f3fef",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/change.md",
+      "destination": "modules/engineering/references/change.md",
+      "source_sha256": "bc496b731a0e88cf82ce67ecc03a1d287867d6e63c310c8f46037acf51d9064c",
+      "distribution_sha256": "9b9683e78026f9f05a3e07927b092e004b455b2ce748f1bdf4d60069fb690fda",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/engineering/references/commits.md",
+      "destination": "modules/engineering/references/commits.md",
+      "source_sha256": "fc5a98d361e3516c9540362084e79dfa27847d209dfbd2bd755239a52e0fc56e",
+      "distribution_sha256": "b5e8302220cbb937c7356eecec40d5a03860235bab43a5b10b33eeba76b1868d",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/engineering/references/context-map.md",
+      "destination": "modules/engineering/references/context-map.md",
+      "source_sha256": "f4664ed4e7343c1146b037a3a5e849921534499abc2b3d10c9a4965fef47059e",
+      "distribution_sha256": "f4664ed4e7343c1146b037a3a5e849921534499abc2b3d10c9a4965fef47059e",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/handoff.md",
+      "destination": "modules/engineering/references/handoff.md",
+      "source_sha256": "7c90ba9117ec95142143f8188e81b3d902f8365b0a4d3cdae66a452679345f8b",
+      "distribution_sha256": "7c90ba9117ec95142143f8188e81b3d902f8365b0a4d3cdae66a452679345f8b",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/review.md",
+      "destination": "modules/engineering/references/review.md",
+      "source_sha256": "6fd7389243678aaa5162aeb73a26fc4b327a513468dfefb4fdca648028e4ba38",
+      "distribution_sha256": "6fd7389243678aaa5162aeb73a26fc4b327a513468dfefb4fdca648028e4ba38",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/rules.md",
+      "destination": "modules/engineering/references/rules.md",
+      "source_sha256": "271c848987145fae0a09f3da732eb273f6709828275c9f98ba9f1ef3e3196f98",
+      "distribution_sha256": "af9211cc636900243aaf0a5f80a3c1e86ee05c9b5abcf7d1ca65024fd3c5165c",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/engineering/references/specifications.md",
+      "destination": "modules/engineering/references/specifications.md",
+      "source_sha256": "e59951d1c6aebd2fc8b77af0c1ac8f46a83519568d7c70e54d44a39df30aa0bb",
+      "distribution_sha256": "e59951d1c6aebd2fc8b77af0c1ac8f46a83519568d7c70e54d44a39df30aa0bb",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/testing-and-benchmarks.md",
+      "destination": "modules/engineering/references/testing-and-benchmarks.md",
+      "source_sha256": "ef7cb20d1c7394224ace6bca0086c4f43baf234fb9ac35b708c8bf8b21f2d0a7",
+      "distribution_sha256": "ef7cb20d1c7394224ace6bca0086c4f43baf234fb9ac35b708c8bf8b21f2d0a7",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/references/workflow.md",
+      "destination": "modules/engineering/references/workflow.md",
+      "source_sha256": "cb14990a5156bc0c74fa0c0204aa6e01e9a1cc8d649fc570004eb8587ecac31e",
+      "distribution_sha256": "cb657b97942fda573b7a1c4809b989dcb6901d5145d86e4db15395387243167f",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/engineering/templates/handoff.md",
+      "destination": "modules/engineering/templates/handoff.md",
+      "source_sha256": "f00f9d3dfe49884a47253e0eff42f3ea4b27157e30e4ec35cc42ec5c5b23631e",
+      "distribution_sha256": "f00f9d3dfe49884a47253e0eff42f3ea4b27157e30e4ec35cc42ec5c5b23631e",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/templates/rule.md",
+      "destination": "modules/engineering/templates/rule.md",
+      "source_sha256": "ea307292947e4dbfe0054688ebd586498951fea30315af5b9ea16b3f19244445",
+      "distribution_sha256": "ea307292947e4dbfe0054688ebd586498951fea30315af5b9ea16b3f19244445",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/templates/rules-readme.md",
+      "destination": "modules/engineering/templates/rules-readme.md",
+      "source_sha256": "bc731152a8720d3b813625b26bcd83b4343a7c2ae6425af0df62beb9248516fd",
+      "distribution_sha256": "bc731152a8720d3b813625b26bcd83b4343a7c2ae6425af0df62beb9248516fd",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/engineering/templates/task-card.md",
+      "destination": "modules/engineering/templates/task-card.md",
+      "source_sha256": "3eec385fe7dbcb77acdf37f093ad37610fdd78dc3b1b41999ade9d23225ffe56",
+      "distribution_sha256": "3eec385fe7dbcb77acdf37f093ad37610fdd78dc3b1b41999ade9d23225ffe56",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/writing/SKILL.md",
+      "destination": "modules/writing/SKILL.md",
+      "source_sha256": "7ce02ac5d5ed6b0d4bfa8faa5fd433317337d7a0f717ccc5345025bd0a0913b4",
+      "distribution_sha256": "b44b98c6129b5dc33cf67c7ad3bc5811245d95fed1868dae2d3cbb77575aa688",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/writing/references/article-writing.md",
+      "destination": "modules/writing/references/article-writing.md",
+      "source_sha256": "e11a64e37b6eeb24b89a9e2cbf9633642e58cbea4e14d48aea84a9f306ddae1f",
+      "distribution_sha256": "e11a64e37b6eeb24b89a9e2cbf9633642e58cbea4e14d48aea84a9f306ddae1f",
+      "mode": "identical"
+    },
+    {
+      "source": "modules/writing/references/examples.md",
+      "destination": "modules/writing/references/examples.md",
+      "source_sha256": "30151ca50d7566a63691a3dd3c20a5aa94abc7c5dcad61d3d98764c9cad8ca7a",
+      "distribution_sha256": "3d8c8dcfe6328d3a91eeff8aae7b4ee4ea3287155196d014170248f894a4512c",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "modules/writing/references/natural-technical-writing.md",
+      "destination": "modules/writing/references/natural-technical-writing.md",
+      "source_sha256": "67046af6922c63914a1e68b3986ae2c15308c89e79343b44cbb082ea8bdfaa2f",
+      "distribution_sha256": "e202c4878f309b33e7d4c01e0ecdf065546aef8225a6240a4f9d981248993adb",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "bootstrap/scripts/projects.py",
+      "destination": "bootstrap/scripts/projects.py",
+      "source_sha256": "173a371529d8af5dff88cbfc954d2808e5db90b343c95a78aab6128d31897f12",
+      "distribution_sha256": "68e770c242b66114adba20699d72f72bbdf7f0efa67c1a5e0c92be6361615b03",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "bootstrap/scripts/skills.py",
+      "destination": "bootstrap/scripts/skills.py",
+      "source_sha256": "7f50285d4c3d7479e0cf299b187e550dc6ec0d02221094560ccb3f5b60ffcf5c",
+      "distribution_sha256": "d2d398b55c80e5f62607581059676e318f37a26a38ca6f82dabbc370b751eef0",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "automations/README.md",
+      "destination": "core/automations.md",
+      "source_sha256": "2b4bd7638ec0b12a58510d94a61c765204afaa5d27b9a51bb6650cc8310058d9",
+      "distribution_sha256": "4233296d6542a9582ecd9d1b217fea162700afeea1581c54c939f94e0c428eb7",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "skills/jarvis-skill-management/SKILL.md",
+      "destination": "modules/skill-management/SKILL.md",
+      "source_sha256": "c0b7a0250e2645a370bd4db9e6d7d132dfbd77b6fc1c74aa0167c7daf49b5f6c",
+      "distribution_sha256": "d241eb1548cbca4d36fc2e349c435df34c22165e512f45478769f645e2eebc37",
+      "mode": "portable-adaptation"
+    },
+    {
+      "source": "core/discussions.md",
+      "destination": "core/discussions.md",
+      "mode": "identical",
+      "source_sha256": "27463e80e7d57a8d659d7fc612cea362dec12b51251e0e9a7bee7a0de4523ab4",
+      "distribution_sha256": "27463e80e7d57a8d659d7fc612cea362dec12b51251e0e9a7bee7a0de4523ab4"
+    },
+    {
+      "source": "core/browser-and-servers.md",
+      "destination": "core/browser-and-servers.md",
+      "mode": "identical",
+      "source_sha256": "e90ac73ced4bee064452a68d64908b9510aa77a3103ae3eba4f12755d957dc45",
+      "distribution_sha256": "e90ac73ced4bee064452a68d64908b9510aa77a3103ae3eba4f12755d957dc45"
+    },
+    {
+      "source": "core/access.md",
+      "destination": "core/access.md",
+      "mode": "portable-adaptation",
+      "source_sha256": "39e962994bb7226c3dbe16cc5f99d02958b5cd7f5196fb2ff637c45a529c4a2a",
+      "distribution_sha256": "cb814cdad9826a1c3084851e63505dbfa7193edefda33a0cb13a19202b59a8f7"
+    }
+  ],
+  "adaptations": [
+    "No source-owner paths, accounts, history, host settings, secrets, Git publication permissions or project-specific Endge policies.",
+    "Memory consent and communication style belong to the new instance configuration.",
+    "Managed module discovery uses verified copies; custom skill originals use registered links.",
+    "Project note corrections retain old content in correction history instead of competing current entries.",
+    "Installer lifecycle retains receipts and legacy card compatibility; live global Jarvis is not reinstalled.",
+    "Long work retains rule IDs and role/permission boundaries; unsupported context-cost assertions are omitted.",
+    "Engineering experiment budgets have one normative owner; experiments provides execution procedure.",
+    "Automations port task/state ownership and executor boundaries, without copying active tasks or schedules.",
+    "Writing examples retain teaching content without importing the original owner style preferences.",
+    "Resource access retains resource-based selection and permission boundaries, using the new owner's ignored local/secrets or OS credential manager; no source access vault or standing synchronization rights are copied."
+  ],
+  "source_snapshot": "Observed working-tree file hashes; source_commit identifies HEAD, not a claim that the source tree is clean."
+}

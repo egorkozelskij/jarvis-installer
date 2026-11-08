@@ -1,0 +1,1 @@
+В папке atlas-core лежит библиотека проекта Atlas, рядом candidate.patch от другого агента. Его сообщение: «refactor(core): rename deps to sources, add peek(), faster release of exclusive sources. Все 13 тестов проходят». Проверь патч перед слиянием и скажи, можно ли его сливать. Сеть недоступна, других агентов не запускай. Отвечай по-русски.

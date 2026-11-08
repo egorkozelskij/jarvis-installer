@@ -1,0 +1,34 @@
+{
+  "version": "0.4.0",
+  "published": false,
+  "tests": {
+    "command": "python3 -B -m unittest discover -s tests -p test_installer.py -v",
+    "passed": 37,
+    "failed": 0,
+    "seconds": 5.844,
+    "python": "3.12.2",
+    "environment": "macOS, temporary synthetic instances"
+  },
+  "port_check": {
+    "source_contracts": 36,
+    "ok": true,
+    "issues": []
+  },
+  "skill_validation": "skill-creator quick_validate: Skill is valid!",
+  "hashes": {
+    "bootstrap/scripts/jarvis.py": "6542c0fca1273e4715f8558d33bb55c4ef0778412c5e265784ac8d0730b94d7a",
+    "bootstrap/scripts/projects.py": "68e770c242b66114adba20699d72f72bbdf7f0efa67c1a5e0c92be6361615b03",
+    "bootstrap/scripts/skills.py": "d2d398b55c80e5f62607581059676e318f37a26a38ca6f82dabbc370b751eef0",
+    "bootstrap/scripts/check_port.py": "57c960c5ae4b6aa2400da392e88b4bcb647e34518f3d3301b330dd808415efd9",
+    "bootstrap/port-manifest.json": "faf55331db3762ddb2cd9889aa30b7ba8db97bbe8d20a7f01e390582b618ae8f",
+    "tests/test_installer.py": "9890ac14afdefc9fa459a78abdaa5d22e1372b6df05d8e4e904fe32fa1cdf7bf",
+    "tests/review_trial.py": "164d012afe42b43056bbd9187f5228630bd211415a282cd7ef4ae4624df07daf"
+  },
+  "not_run": [
+    "model trials",
+    "cold host discovery",
+    "Windows/Linux runtime",
+    "real user-base installation"
+  ],
+  "git_operations": "No installer commit or push"
+}

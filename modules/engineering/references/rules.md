@@ -1,7 +1,7 @@
 # Project rules
 
 A rule is a durable requirement that must survive the current conversation and
-apply to the next agent. Store it once, in the project's governance tree; link
+apply to the next agent. Store it once, in the project's resolved rules section; link
 to it elsewhere instead of copying it.
 
 ## Format
@@ -13,15 +13,15 @@ Use `modules/engineering/templates/rule.md`. Every rule has:
 - **Invariant** — the property that must hold, stated so it can be checked.
 - **Safe path** — the normal way to satisfy it.
 - **Forbidden** — the tempting shortcut it excludes.
-- **Evidence** — how compliance is shown, with one class:
-  `static` (linter, search, type checker), `contract` (tests, compiler,
-  schema), `runtime` (measured or observed behavior), `review` (traced by a
-  reader through code). A rule without an evidence path is a wish.
+- **Evidence** — how compliance is shown: `hard-static`, `hard-contract`,
+  `runtime-evidence`, or `architecture-review`. Legacy aliases `static`,
+  `contract`, `runtime`, and `review` retain their corresponding meaning. A rule without an evidence path is a wish.
 
 ## Hierarchy
 
-`governance/README.md` holds project-wide rules and routes to branches such as
-`backend/README.md` or `packages/<name>/README.md`. Read the common level, then
+The card's resolved rules entrypoint routes to project-wide rules and branches
+such as backend or packages. Sources and instance location_mode do not determine
+where rules live. For legacy cards retain the explicit entrypoint. Read the common level, then
 only the branch the task touches. A narrower rule may refine a broader one only
 by naming the original ID, the exact scope and the reason. Being deeper in the
 tree is not permission to cancel what was read above.
